@@ -32,8 +32,10 @@ def test_validate_required_fields():
         {"age": 15.5}
     ]
 
-    with raises(KeyError):
+    with raises(ValueError) as e:
         [result] = validark.validate(schema, records)
+
+    assert str(e.value) == 'The field "name" is required.'
 
 
 def test_validate_validator_functions():
@@ -70,4 +72,42 @@ def test_validate_lambda_functions():
     assert result == [
         {"place": "England", "year": 2021},
         {"place": "Japan", "year": 1970}
+    ]
+
+
+def test_validate_aliases():
+    schema = {
+        "*first_name:=firstName": str,
+        "*last_name:=lastName": str
+    }
+
+    records = [
+        {"first_name": "Donald", "last_name": "Trump"},
+        {"firstName": "Joseph", "lastName": "Biden"}
+    ]
+
+    result = validark.validate(schema, records)
+
+    assert result == [
+        {"first_name": "Donald", "last_name": "Trump"},
+        {"first_name": "Joseph", "last_name": "Biden"}
+    ]
+
+
+def test_validate_multiple_aliases():
+    schema = {
+        "*first_name:=name:=firstName": str,
+        "*last_name:=surName:=lastName": str
+    }
+
+    records = [
+        {"first_name": "Donald", "name": "John", "surName": "Trump"},
+        {"firstName": "Joseph", "name": "Robinette", "lastName": "Biden"}
+    ]
+
+    result = validark.validate(schema, records)
+
+    assert result == [
+        {"first_name": "Donald", "last_name": "Trump"},
+        {"first_name": "Robinette", "last_name": "Biden"}
     ]
