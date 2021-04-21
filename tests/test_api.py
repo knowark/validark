@@ -52,3 +52,22 @@ def test_validate_validator_functions():
     assert result == {
         "product": "Manimoto", "quantity": 5, "price": 4700.0
     }
+
+
+def test_validate_lambda_functions():
+    schema = {
+        "*place": str,
+        "year": lambda v: 1920 < v < 2030 and v or 1970
+    }
+
+    records = [
+        {"place": "England", "year": 2021},
+        {"place": "Japan", "year": 2050}
+    ]
+
+    result = validark.validate(schema, records)
+
+    assert result == [
+        {"place": "England", "year": 2021},
+        {"place": "Japan", "year": 1970}
+    ]
