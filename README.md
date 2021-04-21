@@ -65,3 +65,24 @@ Mandatory fields can be marked with an **asterix (*)** as key prefix:
         "*firstname": str,
         "*surname": str,
     }
+
+Aliases can be delimited with **:=**. The final key will be the leftmost entry:
+
+    schema = {
+        "*first_name:=firstname:=firstName": str,
+        "*last_name:=lastname:=lastName": str
+    }
+
+    values = [
+        {"firstName": "Clark", "lastName": "Kent"},
+        {"firstname": "Peter", "lastname": "Parker"},
+        {"first_name": "Bruce", "last_name": "Wayne"}
+    ]
+
+    result = validate(schema, values)
+
+    assert result == [
+        {"first_name": "Clark", "last_name": "Kent"},
+        {"first_name": "Peter", "last_name": "Parker"},
+        {"first_name": "Bruce", "last_name": "Wayne"}
+    ]
