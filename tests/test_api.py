@@ -190,3 +190,27 @@ def test_validate_list_schema_values():
             {"street": '7th Street 67', "city": "Churchland"}
         ]
     }
+
+
+def test_validate_exception_object():
+    schema = {
+        "*duration": lambda v: 0 <= v <= 59 and v or 0,
+        "*contact": {
+            "*phone": str,
+            "email": lambda v: '@' in v and v or ValueError(
+                f'Invalid email: "{v}"')
+        }
+    }
+
+    records = [{
+        "duration": 50,
+        "contact": {
+            "phone": 3456789,
+            "email": "blablabla"
+        }
+    }]
+
+    with raises(ValueError) as e:
+        [result] = validark.validate(schema, records)
+
+    assert str(e.value) == 'Invalid email: "blablabla"'

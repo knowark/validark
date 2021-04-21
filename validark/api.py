@@ -27,7 +27,11 @@ def validate(schema: Dict[str, Any], records: List[Dict[str, Any]]):
                         item[key] = [validator(item) for item in value]
                     continue
 
-                item[key] = validator(value)
+                outcome = validator(value)
+                if isinstance(outcome, Exception):
+                    raise outcome
+
+                item[key] = outcome
 
         result.append(item)
 
