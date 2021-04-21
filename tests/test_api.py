@@ -1,3 +1,4 @@
+from pytest import raises
 import validark
 
 
@@ -12,10 +13,24 @@ def test_validate_simple_data():
         "year": int
     }
 
-    values = [
+    records = [
         {"company": "Knowark", "city": "Popayán", "year": 2015}
     ]
 
-    [result] = validark.validate(schema, values)
+    [result] = validark.validate(schema, records)
 
     assert result == {"company": "Knowark", "city": "Popayán", "year": 2015}
+
+
+def test_validate_required_fields():
+    schema = {
+        "*name": str,
+        "age": float
+    }
+
+    records = [
+        {"age": 15.5}
+    ]
+
+    with raises(KeyError):
+        [result] = validark.validate(schema, records)
