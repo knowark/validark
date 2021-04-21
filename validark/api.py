@@ -19,6 +19,13 @@ def validate(schema: Dict[str, Any], records: List[Dict[str, Any]]):
                     item[key] = next(iter(
                         validate(validator, [value])))
                     continue
+                elif isinstance(validator, list):
+                    validator = validator.pop()
+                    if isinstance(validator, dict):
+                        item[key] = validate(validator, value)
+                    else:
+                        item[key] = [validator(item) for item in value]
+                    continue
 
                 item[key] = validator(value)
 

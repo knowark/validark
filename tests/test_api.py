@@ -163,3 +163,30 @@ def test_validate_nested_dicts():
             "email": ""
         }
     }]
+
+
+def test_validate_list_schema_values():
+    schema = {
+        "levels": [str],
+        "addresses": [
+            {'*street': str, 'city': str}
+        ]
+    }
+
+    records = [{
+        "levels": [1, 2, 3],
+        "addresses": [
+            {"street": '5th Ave 45', "city": "Popeland"},
+            {"street": '7th Street 67', "city": "Churchland"}
+        ]
+    }]
+
+    [result] = validark.validate(schema, records)
+
+    assert result == {
+        "levels": ["1", "2", "3"],
+        "addresses": [
+            {"street": '5th Ave 45', "city": "Popeland"},
+            {"street": '7th Street 67', "city": "Churchland"}
+        ]
+    }

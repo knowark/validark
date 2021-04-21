@@ -105,3 +105,31 @@ processed from right to left if there are multiple matches:
     assert result == {
         "name": "James", "player_id": "007", "score": 99
     }
+
+Sequences of items might be handled by defining the **validation function
+inside a list**:
+
+    schema = {
+        "levels": [str],
+        "addresses": [
+            {'*street': str, 'city': str}
+        ]
+    }
+
+    records = [{
+        "levels": [1, 2, 3],
+        "addresses": [
+            {"street": '5th Ave 45', "city": "Popeland"},
+            {"street": '7th Street 67', "city": "Churchland"}
+        ]
+    }]
+
+    [result] = validate(schema, records)
+
+    assert result == {
+        "levels": ["1", "2", "3"],
+        "addresses": [
+            {"street": '5th Ave 45', "city": "Popeland"},
+            {"street": '7th Street 67', "city": "Churchland"}
+        ]
+    }
