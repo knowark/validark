@@ -1,3 +1,9 @@
+from typing import Dict, List, Any
 
-def validate():
-    """Validation function."""
+
+def validate(schema: Dict[str, Any], values: List[Dict[str, Any]]):
+    result = []
+
+    result = values
+
+    return result
