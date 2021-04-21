@@ -14,7 +14,13 @@ def validate(schema: Dict[str, Any], records: List[Dict[str, Any]]):
             if required and value is None:
                 raise ValueError(f'The field "{key}" is required.')
 
-            item[key] = validator(value)
+            if value is not None:
+                if isinstance(validator, dict):
+                    item[key] = next(iter(
+                        validate(validator, [value])))
+                    continue
+
+                item[key] = validator(value)
 
         result.append(item)
 

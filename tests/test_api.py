@@ -111,3 +111,55 @@ def test_validate_multiple_aliases():
         {"first_name": "Donald", "last_name": "Trump"},
         {"first_name": "Robinette", "last_name": "Biden"}
     ]
+
+
+def test_validate_nested_dicts():
+    schema = {
+        "*color": str,
+        "width": int,
+        "height": int,
+        "weight": float,
+        "duration": lambda v: 0 <= v <= 59 and v or 0,
+        "*contact": {
+            "*phone": str,
+            "email": lambda v: '@' in v and v or ''
+        }
+    }
+
+    records = [{
+        "color": "red",
+        "width": 100,
+        "height": 300,
+        "duration": 50,
+        "contact": {
+            "phone": 3456789,
+            "email": "info@example.com"
+        }
+    }, {
+        "color": "blue",
+        "duration": 99,
+        "contact": {
+            "phone": 987654,
+            "email": "blablabla"
+        }
+    }]
+
+    result = validark.validate(schema, records)
+
+    assert result == [{
+        "color": "red",
+        "width": 100,
+        "height": 300,
+        "duration": 50,
+        "contact": {
+            "phone": "3456789",
+            "email": "info@example.com"
+        }
+    }, {
+        "color": "blue",
+        "duration": 0,
+        "contact": {
+            "phone": "987654",
+            "email": ""
+        }
+    }]

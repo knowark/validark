@@ -32,10 +32,10 @@ validation callables, dictionaries or lists. e.g.:
         "width": int,
         "height": int,
         "weight": float,
-        "duration": lambda v: 0 < v <= 50 and v
+        "duration": lambda v: 0 <= v <= 59 and v or 0
         "contact": {
             "phone": str,
-            "email": lambda v: '@' in v and v
+            "email": lambda v: '@' in v and v or ''
         }
     }
 
