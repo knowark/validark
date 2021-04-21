@@ -34,3 +34,21 @@ def test_validate_required_fields():
 
     with raises(KeyError):
         [result] = validark.validate(schema, records)
+
+
+def test_validate_validator_functions():
+    schema = {
+        "product": str,
+        "quantity": int,
+        "price": float
+    }
+
+    records = [
+        {"product": "Manimoto", "quantity": 5.5, "price": 4700}
+    ]
+
+    [result] = validark.validate(schema, records)
+
+    assert result == {
+        "product": "Manimoto", "quantity": 5, "price": 4700.0
+    }

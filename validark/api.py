@@ -12,7 +12,7 @@ def validate(schema: Dict[str, Any], records: List[Dict[str, Any]]):
                 key = key[1:]
                 value = record[key]
 
-            item[key] = value
+            item[key] = validator(value)
 
         result.append(item)
 
