@@ -86,3 +86,22 @@ Aliases can be delimited with **:=**. The final key will be the leftmost entry:
         {"first_name": "Peter", "last_name": "Parker"},
         {"first_name": "Bruce", "last_name": "Wayne"}
     ]
+
+Extra keys in the values' entries are ignored and aliases definitions are
+processed from right to left if there are multiple matches:
+
+    schema = {
+        "*name": str,
+        "*player_id:=playerId": str,
+        "*score:=totalScore:=points": int
+    }
+
+    values = [
+        {"name": "James", "playerId": "007", "totalScore": 99, "points": 55}
+    ]
+
+    [result] = validate(schema, values)
+
+    assert result == {
+        {"name": "James", "player_id": "007", "score": 99}
+    }
