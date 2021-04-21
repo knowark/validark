@@ -103,5 +103,5 @@ processed from right to left if there are multiple matches:
     [result] = validate(schema, values)
 
     assert result == {
-        {"name": "James", "player_id": "007", "score": 99}
+        "name": "James", "player_id": "007", "score": 99
     }
