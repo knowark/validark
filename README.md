@@ -4,7 +4,7 @@ Simple Data Validation Library
 
 ## Usage
 
-Call the **validate** method with the required *schema* and the *records*
+Call the **validate** method with the required *schema* and the *value*
 to be validated:
 
     from validark import validate
@@ -14,12 +14,12 @@ to be validated:
         "age": int
     }
 
-    records = [{
+    value = {
         "name": "Pepito Pérez",
         "age": 64
-    }]
+    }
 
-    [result] = validate(schema, records)
+    result = validate(schema, value)
 
     assert result == value
 
