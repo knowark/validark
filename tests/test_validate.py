@@ -214,3 +214,49 @@ def test_validate_exception_object():
         [result] = validark.validate(schema, records)
 
     assert str(e.value) == 'Invalid email: "blablabla"'
+
+
+def test_validate_single_dictionary():
+    schema = {
+        "records": [{
+            "*duration": lambda v: 0 <= v <= 59 and v or 0,
+            "*contact": {
+                "*phone": str,
+                "email": lambda v: '@' in v and v or ''
+            }
+        }]
+    }
+
+    request = {
+        "records": [{
+            "duration": 50,
+            "contact": {
+                "phone": 3456789,
+                "email": "info@example.com"
+            }
+        }, {
+            "duration": 99,
+            "contact": {
+                "phone": 987654,
+                "email": "blablabla"
+            }
+        }]
+    }
+
+    result = validark.validate(schema, request)
+
+    assert result == {
+        'records': [{
+            "duration": 50,
+            "contact": {
+                "phone": "3456789",
+                "email": "info@example.com"
+            }
+        }, {
+            "duration": 0,
+            "contact": {
+                "phone": "987654",
+                "email": ""
+            }
+        }]
+    }

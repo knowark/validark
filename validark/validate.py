@@ -1,7 +1,19 @@
-from typing import Dict, List, Any
+from typing import Dict, List, Union, Any
 
 
-def validate(schema: Dict[str, Any], records: List[Dict[str, Any]]):
+Schema = Dict[str, Any]
+
+
+Value = Union[List[Dict[str, Any]], Dict[str, Any]]
+
+
+Result = Union[List[Dict[str, Any]], Dict[str, Any]]
+
+
+def validate(schema: Schema, value: Value) -> Result:
+    single = not isinstance(value, list)
+    records = single and [value] or value
+
     result = []
     for record in records:
         item = {}
@@ -35,4 +47,4 @@ def validate(schema: Dict[str, Any], records: List[Dict[str, Any]]):
 
         result.append(item)
 
-    return result
+    return single and next(iter(result)) or result
